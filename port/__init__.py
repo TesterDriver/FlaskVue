@@ -23,7 +23,7 @@ app.config.from_envvar('FLASKR_SETTINGS')   #环境变量，指向配置文件se
 #创建数据库对象
 db = SQLAlchemy(app)
 
-from port.model import User,Category,Case
+from port.model import User,Category,Case,Projects,Cases,Api,Initialization,DataSource
 
 from port.controller import login
 from port.controller import request

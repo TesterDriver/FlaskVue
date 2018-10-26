@@ -7,13 +7,14 @@ from flask import request,jsonify
 @app.route('/add',methods=['POST'])
 def adduser():
      data = request.get_data()
-     data = get_json(data)
-     title = data['title']
-     content = data['text']
-     category = Category(title,content)
-     db.session.add(category)
-     db.session.commit()
-     return ("注册成功")
+     #data = get_json(data)
+     print(data)
+     # title = data['title']
+     # content = data['text']
+     # category = Category(title,content)
+     # db.session.add(category)
+     # db.session.commit()
+     return (data)
 @app.route('/update',methods=['POST'])
 def update():
      result = Category.query.filter(Category.title == '测试2').first()
@@ -29,10 +30,11 @@ def delete():
     return ("删除成功")
 @app.route('/test',methods=['GET','POST','DELETE','PUT'])
 def test():
-    #data = request.data()
+    data = request.get_data()
+    print(data)
     #data = get_json(data)
     #print(data)
-    return ("test成功")
+    return (jsonify({"age":"22"}))
 #登陆模块
 @app.route('/login',methods=['POST'])
 def login():
