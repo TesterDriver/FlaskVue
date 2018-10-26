@@ -4,17 +4,28 @@ from port import app
 from flask import request,jsonify
 from port.controller.public import get_json
 from port.model.Case import Case
+from port.model.Cases import Cases
 @app.route('/ask',methods=['POST','GET','PUT','DELETE'])
 def ask():
     try:
+        # data = request.get_data()
+        # data = get_json(data)
+        # caseBook = data['case_book']
+        # portame = data['port_name']
+        # case = Case.query.filter_by(case_book=caseBook, port_name=portame).first()
+        # Method=case.method
+        # json_data=case.json_data
+        # Url=case.url
         data = request.get_data()
         data = get_json(data)
-        caseBook = data['case_book']
-        portame = data['port_name']
-        case = Case.query.filter_by(case_book=caseBook, port_name=portame).first()
-        Method=case.method
-        json_data=case.json_data
-        Url=case.url
+        Id = data['id']
+        caseName = data['case_name']
+        projectId = data['proect_id']
+        case = Cases.query.filter_by(id=Id, case_name=caseName, proect_id=projectId).first()
+        print(case.method)
+        Method = case.method
+        json_data = case.json_data
+        Url = case.url
         if Method == 'POST':
             headers = {'content-type': 'application/json','x-userid':'1'}
             response = requests.post( Url ,data = json_data,headers=headers)
