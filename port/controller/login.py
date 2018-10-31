@@ -3,12 +3,13 @@ from port.model.Category import Category
 from port.controller.public import get_json
 from port import app,db
 from flask import request,jsonify
-
+from port.controller.assertion import assertion
 @app.route('/add',methods=['POST'])
 def adduser():
-     data = request.get_data()
+     #data = request.get_data()
      #data = get_json(data)
-     print(data)
+     test = assertion({"111": "haha"},1).assertion()
+     return (test)
      # title = data['title']
      # content = data['text']
      # category = Category(title,content)

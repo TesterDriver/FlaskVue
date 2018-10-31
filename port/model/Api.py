@@ -7,7 +7,7 @@ class Api(db.Model):
     case_id = db.Column(db.String(16),index=True, nullable=False) #(案例集id)解决unique必填属性不好用的问题 unique=True,
     Parameter_type = db.Column(db.String(32),index=True, nullable=False)#参数类型
     header = db.Column(db.String(255),index=True, nullable=False)#头信息
-    parameter_json = db.Column(db.String(700),index=True, nullable=False)#请求报文
+    parameter_json = db.Column(db.UnicodeText,index=True, nullable=False)#请求报文
     def __init__(self,api_name,case_id,Parameter_type,header,parameter_json):
         self.api_name = api_name
         self.case_id  = case_id

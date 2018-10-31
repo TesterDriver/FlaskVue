@@ -6,6 +6,7 @@ class Cases(db.Model):
     project_id = db.Column(db.String(32),index=True, nullable=False)#项目id
     url = db.Column(db.String(255),index=True, nullable=False)#接口地址
     method = db.Column(db.String(32),index=True, nullable=False)#接口方法
+    del_flg = db.Column(db.String(5), default=0, index=True, nullable=False)#删除标识
 
     def __init__(self,case_name,project_id,url,method):
         self.case_name  = case_name

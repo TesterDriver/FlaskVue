@@ -3,57 +3,51 @@ import json
 from port import app
 from flask import request,jsonify
 from port.controller.public import get_json
-from port.model.Case import Case
 from port.model.Cases import Cases
+from port.model.Api import Api
+from port.controller.assertion import  assertion
 @app.route('/ask',methods=['POST','GET','PUT','DELETE'])
 def ask():
     try:
-        # data = request.get_data()
-        # data = get_json(data)
-        # caseBook = data['case_book']
-        # portame = data['port_name']
-        # case = Case.query.filter_by(case_book=caseBook, port_name=portame).first()
-        # Method=case.method
-        # json_data=case.json_data
-        # Url=case.url
         data = request.get_data()
         data = get_json(data)
-        Id = data['id']
+        id = data['id']
         caseName = data['case_name']
-        projectId = data['proect_id']
-        case = Cases.query.filter_by(id=Id, case_name=caseName, proect_id=projectId).first()
-        print(case.method)
+        projectId = data['project_id']
+        apiName = data['api_name']
+        case = Cases.query.filter_by(id=id, case_name=caseName, project_id=projectId).first()
+        caseId = case.id
         Method = case.method
-        json_data = case.json_data
         Url = case.url
+        api = Api.query.filter_by(id=caseId, api_name=apiName).first()
+        json_data = api.parameter_json
+        header_data = api.header
         if Method == 'POST':
-            headers = {'content-type': 'application/json','x-userid':'1'}
-            response = requests.post( Url ,data = json_data,headers=headers)
+            response = requests.post( Url ,data = json_data,headers = json.loads(header_data))#,headers = json.loads(header_data)
             if response.status_code == 200:
-                text = json.loads(response.text)
-                return jsonify(text)
+                text = json.loads(response.text)#转换成dict类型
+                results = assertion(response.text,id).assertion()
+                if results == {"断言对比成功！":"0000"}:
+                    return jsonify({"result": results,"response": text})
+                elif results == "无断言":
+                    return jsonify({"result": "无断言","response": text})
+                else:
+                    return jsonify({"result": results,"response": text})
             else:
-                return ("返回异常，异常码:"+str(response.status_code)+str(response.text))
+                return ("返回异常\n异常码:"+str(response.status_code)+"\n返回内容\n"+str(response.text))
         elif Method == 'GET':
             response = requests.get(Url,params=json.loads(json_data))#数据库存储的json_data为字符串类型 需要转化一下
-            print(response.status_code)
             if response.status_code == 200:
                 text = json.loads(response.text)
-                return jsonify(text)
+                results = assertion(response.text, id).assertion()
+                if results == {"断言对比成功！": "0000"}:
+                    return jsonify({"result": results, "response": text})
+                elif results == "无断言":
+                    return jsonify({"result": "无断言", "response": text})
+                else:
+                    return jsonify({"result": results, "response": text})
             else:
                 return ("返回异常，异常码:"+str(response.status_code))
-        elif request.method == 'DELETE':
-            url = 'http://127.0.0.1:5000/test'
-            print("进入delete")
-            response = requests.delete(url)
-            if response.status_code == 200:
-                return ('delete成功')
-        elif request.method == 'PUT':
-            url = 'http://127.0.0.1:5000/test'
-            print("进入PUT")
-            response = requests.put(url)
-            if response.status_code == 200:
-                return ('delete成功')
     except Exception as e:
         print(e)
         return jsonify("系统异常")
