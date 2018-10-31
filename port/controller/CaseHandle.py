@@ -1,9 +1,7 @@
 from port import app,db
 from flask import request,jsonify
 from port.controller.public import get_json
-from port.model.Case import Case
 from port.model.Cases import Cases
-import json
 @app.route('/addCase',methods=['POST'])
 def addCase():
     try:

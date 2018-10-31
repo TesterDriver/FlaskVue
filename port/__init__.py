@@ -28,6 +28,7 @@ from port.model import User,Category,Case,Projects,Cases,Api,Initialization,Data
 from port.controller import login
 from port.controller import request
 from port.controller import CaseHandle
+from port.controller import ApiHandle
 # json encoding 用于数据库取值转换成json格式的方法
 from port.controller.AlchemyEncoder import AlchemyEncoder as AlchemyEncoder
 app.json_encoder = AlchemyEncoder
